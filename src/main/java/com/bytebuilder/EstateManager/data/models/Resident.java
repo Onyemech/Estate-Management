@@ -1,21 +1,66 @@
 package com.bytebuilder.EstateManager.data.models;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-@Setter
-@Getter
-@Document(collection = "Resident")
-public class Resident {
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-    @Id
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Resident implements UserDetails {
+
     private String id;
     private String name;
-    private String password;
     private String email;
-    private String otp;
+    private String password;
     private String phone;
+    private String otp;
     private long otpExpiryTime;
+    private List<String> roles;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Convert roles to GrantedAuthority objects
+        if (roles == null) {
+            return Collections.emptyList();
+        }
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                .toList();
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

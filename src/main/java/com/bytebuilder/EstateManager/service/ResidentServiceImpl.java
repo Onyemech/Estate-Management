@@ -8,6 +8,7 @@ import com.bytebuilder.EstateManager.dtos.responses.LoginResponse;
 import com.bytebuilder.EstateManager.dtos.responses.ResidentResponse;
 import com.bytebuilder.EstateManager.exceptions.ResourceNotFoundException;
 import com.bytebuilder.EstateManager.utils.GenerateOtp;
+import com.bytebuilder.EstateManager.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +21,22 @@ public class ResidentServiceImpl implements ResidentService {
     @Autowired
     private GenerateOtp generateOtp;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     @Override
     public ResidentResponse createNewResident(CreateNewResidentRequest request) {
         boolean residentExists = residentRepository.existsByEmail(request.getEmail());
         if (residentExists) {
             throw new ResourceNotFoundException("Resident already exists");
         }
+
+        String userPassword = request.getPassword();
+        String hashedPassword = PasswordUtil.hashPassword(userPassword);
+
         Resident resident = new Resident();
         resident.setName(request.getName());
-        resident.setPassword(request.getPassword());
+        resident.setPassword(hashedPassword);
         resident.setEmail(request.getEmail());
         resident.setPhone(request.getPhone());
         residentRepository.save(resident);
@@ -43,15 +51,22 @@ public class ResidentServiceImpl implements ResidentService {
 
     @Override
     public LoginResponse loginResident(LoginRequest request) {
+        String userPassword = request.getPassword();
+        String hashedPassword = PasswordUtil.hashPassword(userPassword);
+
         Resident resident = residentRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("Invalid email or password"));
-        if (!request.getPassword().equals(resident.getPassword())) {
+        if (!PasswordUtil.verifyPassword(request.getPassword(), resident.getPassword())) {
             throw new IllegalArgumentException("Invalid email or password");
         }
 
+        String token = jwtTokenProvider.generateToken(resident.getEmail());
+
         LoginResponse loginResponse = new LoginResponse();
+
         loginResponse.setResidentId(resident.getId());
         loginResponse.setName(resident.getName());
+        loginResponse.setToken(token);
 
         return loginResponse;
     }
