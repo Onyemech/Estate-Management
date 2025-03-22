@@ -29,6 +29,11 @@ public class ResidentController {
         return ResponseEntity.ok(loginResponse);
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("Server is running!");
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ResidentResponse> getResidentById(@PathVariable("id") String residentId) {
         ResidentResponse residentDto = residentService.getResidentById(residentId);

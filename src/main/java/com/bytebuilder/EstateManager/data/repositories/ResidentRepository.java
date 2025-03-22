@@ -9,4 +9,5 @@ public interface ResidentRepository extends MongoRepository<Resident, String> {
     Optional <Resident> findByEmail(String email);
     Optional <Resident> findByPhone(String id);
     boolean existsByEmail(String email);
+    boolean existsByPhone(String phone);
 }

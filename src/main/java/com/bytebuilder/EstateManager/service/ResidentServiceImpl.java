@@ -26,8 +26,9 @@ public class ResidentServiceImpl implements ResidentService {
 
     @Override
     public ResidentResponse createNewResident(CreateNewResidentRequest request) {
-        boolean residentExists = residentRepository.existsByEmail(request.getEmail());
-        if (residentExists) {
+        boolean residentExistsByEmail = residentRepository.existsByEmail(request.getEmail());
+        boolean residentExistsByPhone = residentRepository.existsByPhone(request.getPhone());
+        if (residentExistsByEmail || residentExistsByPhone) {
             throw new ResourceNotFoundException("Resident already exists");
         }
 

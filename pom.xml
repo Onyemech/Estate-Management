@@ -53,7 +53,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-sync</artifactId>
-            <version>5.3.1</version>
+            <version>4.9.1</version>
         </dependency>
 
         <!-- Spring Boot Test (includes JUnit 5) -->
@@ -142,40 +142,6 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.10.0</version> <!-- Use the latest stable version -->
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Mockito (for mocking dependencies in unit tests) -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>5.5.0</version> <!-- Use the latest stable version -->
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.5.0</version> <!-- Use the latest stable version -->
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Testcontainers (for integration tests with real databases) -->
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers</artifactId>
-            <version>1.19.0</version> <!-- Use the latest stable version -->
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>1.19.0</version> <!-- Use the latest stable version -->
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>mongodb</artifactId>
-            <version>1.19.0</version> <!-- Use the latest stable version -->
             <scope>test</scope>
         </dependency>
 

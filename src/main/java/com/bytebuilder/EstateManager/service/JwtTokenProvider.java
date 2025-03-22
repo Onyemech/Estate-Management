@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -24,7 +25,11 @@ public class JwtTokenProvider {
 
 
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        byte [] keyBytes = Base64.getDecoder().decode(jwtSecret.getBytes());
+        if (keyBytes.length < 64) { // 64 bytes = 512 bits
+            throw new IllegalArgumentException("JWT secret key must be at least 512 bits (64 bytes) for HS512.");
+        }
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public JwtTokenProvider(CustomUserDetailsService customUserDetailsService) {
